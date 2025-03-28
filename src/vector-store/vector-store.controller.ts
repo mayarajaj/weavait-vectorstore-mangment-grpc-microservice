@@ -47,7 +47,7 @@ export class VectorStoreController {
                 pageContent: doc.pageContent,
                 metadata: {
                     ...doc.metadata,
-                    ids: uuidv4()
+                    uuid:  `mayar${uuidv4()}`
                 }
             
 

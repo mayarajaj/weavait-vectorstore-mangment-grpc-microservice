@@ -6,6 +6,7 @@ import type { Document } from "@langchain/core/documents";
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from "uuid";
 import { Message } from '@nestjs/microservices/external/kafka.interface';
+import { TextValues, UuidValues } from 'weaviate-client/dist/node/cjs/proto/v1/properties';
 
 @Injectable()
 export class VectorStoreService {
@@ -88,7 +89,7 @@ export class VectorStoreService {
                 client: this.weaviateClient,
                 indexName: indexName ,
                 textKey: textKey,
-                metadataKeys: metadataKeys ,
+                metadataKeys: metadataKeys,
             });
     
             const filter = {
@@ -138,7 +139,7 @@ export class VectorStoreService {
     }
 
     async deleteDocument(
-        indexName : string , textKey : string, metadataKeys: string[] , id : string 
+        indexName : string , textKey : string, metadataKeys: string[] , uuid : string 
     ): Promise<{message : string}> {
         try {
             const vectorStore = new WeaviateStore(this.embeddings, {
@@ -146,22 +147,25 @@ export class VectorStoreService {
                 indexName: indexName ,
                 textKey: textKey,
                 metadataKeys: metadataKeys ,
+
             });
             const filter = {
-                where: {
+                 where :
+                    {
                     operator: "Equal" as const,
-                    path: 'uuid',
-                    valueText: id,
-                },
+                    path: ['uuid'],
+                    valueText : uuid,
+                    }
+                
             };
             
             
                 await vectorStore.delete({
-                    ids: [id]
-                });
+                   ids:[uuid] 
+                               });
         
-                this.logger.log(`Document with id ${id} deleted successfully.`);
-                return { message: `Document with id ${id} deleted successfully.` };
+                this.logger.log(`Document with id ${uuid} deleted successfully.`);
+                return { message: `Document with id ${uuid} deleted successfully.` };
             }
             
          catch (error) {
@@ -170,8 +174,6 @@ export class VectorStoreService {
         }
 
     }
-    
-    
 
 
 }
