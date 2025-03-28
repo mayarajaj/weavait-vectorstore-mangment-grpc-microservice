@@ -154,15 +154,15 @@ export class VectorStoreService {
                     {
                     operator: "Equal" as const,
                     path: ['uuid'],
-                    valueText : uuid,
+                    valueText : `${uuid}` ,
                     }
                 
             };
             
             
                 await vectorStore.delete({
-                   ids:[uuid] 
-                               });
+                    filter:filter
+                });
         
                 this.logger.log(`Document with id ${uuid} deleted successfully.`);
                 return { message: `Document with id ${uuid} deleted successfully.` };
