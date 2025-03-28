@@ -16,7 +16,7 @@ export class VectorStoreController {
 
         , 
     
-    }): Promise<{ message: string }> {
+        }): Promise<{ message: string }> {
         try {
             
 
@@ -47,7 +47,7 @@ export class VectorStoreController {
                 pageContent: doc.pageContent,
                 metadata: {
                     ...doc.metadata,
-                    uuid:  `mayar${uuidv4()}`
+                    uuid:  `${uuidv4()}`
                 }
             
 
@@ -63,7 +63,6 @@ export class VectorStoreController {
             throw new Error(`Error in gRPC AddDocuments: ${error.message}`);
         }
     }
-    // vector-store.controller.ts
     @GrpcMethod('VectorStoreService', 'SearchDocumentsWithFilter')
 async searchDocumentsWithFilter(request : {
     query: string ,
@@ -78,29 +77,29 @@ async searchDocumentsWithFilter(request : {
     const docs = await this.vectorStoreService.searchDocumentsWithFilter(request.query, request.k, request.filterKey, request.filterValue , request.indexName , request.textKey , request.metadataKeys);
     return { documents: docs };
 }
-@GrpcMethod('VectorStoreService', 'SearchDocuments')
-async searchDocuments(request : {
-    query: string ,
-    k : number ,
-    filterKey: string ,
-    filterValue: string ,
-    indexName : string , 
-    textKey : string ,
-    metadataKeys : string[]  ,
-}): Promise<{ documents: { pageContent: string; metadata: Record<string, any> }[] }>{
-    
-    const docs = await this.vectorStoreService.searchDocuments(request.query, request.k,  request.indexName , request.textKey , request.metadataKeys);
-    return { documents: docs };
-}
+    @GrpcMethod('VectorStoreService', 'SearchDocuments')
+    async searchDocuments(request : {
+        query: string ,
+        k : number ,
+        filterKey: string ,
+        filterValue: string ,
+        indexName : string , 
+        textKey : string ,
+        metadataKeys : string[]  ,
+    }): Promise<{ documents: { pageContent: string; metadata: Record<string, any> }[] }>{
+        
+        const docs = await this.vectorStoreService.searchDocuments(request.query, request.k,  request.indexName , request.textKey , request.metadataKeys);
+        return { documents: docs };
+    }
 
-@GrpcMethod('VectorStoreService', 'DeleteDocument')
-async deleteDocument(
-    request: {indexName : string , textKey : string , metadataKeys: string[] ,  id: string }
-): Promise<{ message: string }> {
-    
-    
-    return this.vectorStoreService.deleteDocument(request.indexName , request.textKey , request.metadataKeys , request.id);
-}
+    @GrpcMethod('VectorStoreService', 'DeleteDocument')
+        async deleteDocument(
+        request: {indexName : string , textKey : string , metadataKeys: string[] ,  id: string }
+        ): Promise<{ message: string }> {
+        
+        
+        return this.vectorStoreService.deleteDocument(request.indexName , request.textKey , request.metadataKeys , request.id);
+    }
 
 
 }

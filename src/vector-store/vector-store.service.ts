@@ -4,9 +4,8 @@ import { OpenAIEmbeddings } from '@langchain/openai';
 import weaviate, { ApiKey } from 'weaviate-ts-client';
 import type { Document } from "@langchain/core/documents";
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from "uuid";
-import { Message } from '@nestjs/microservices/external/kafka.interface';
-import { TextValues, UuidValues } from 'weaviate-client/dist/node/cjs/proto/v1/properties';
+
+
 
 @Injectable()
 export class VectorStoreService {
@@ -37,6 +36,7 @@ export class VectorStoreService {
             throw new Error(`Initialization failed: ${error.message}`);
         }
     }
+
     async createVectorStore(indexName: string, textKey: string, metadataKeys: string[] ): Promise<{message : string}> {
         try {
             this.logger.log(`Creating vector store with indexName=${indexName}, textKey=${textKey}, metadataKeys=${metadataKeys.join(",")}`);
@@ -47,11 +47,10 @@ export class VectorStoreService {
                 textKey: textKey,
                 metadataKeys: metadataKeys,
             });
-            this.weaviateClient
-            //await vectorStore.addDocuments(documents);
+            
 
-            this.logger.log(`Vector store [${indexName}] created and documents added successfully.`);
-            return {message : `Vector store [${indexName}] created and documents added successfully.`} ;
+            this.logger.log(`Vector store [${indexName}] created successfully.`);
+            return {message : `Vector store [${indexName}] created successfully.`} ;
         } catch (error) {
             this.logger.error('Error while creating vector store', error.stack);
             throw new Error(`Failed to create vector store: ${error.message}`);
